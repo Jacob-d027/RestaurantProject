@@ -39,6 +39,8 @@ class MenuController {
         let menuURL = components.url!
         let (data, response) = try await URLSession.shared.data(from: menuURL)
         
+        print(response)
+        print(String(data: data, encoding: .utf8))
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw MenuControllerError.menuItemsNotFound
         }
@@ -65,7 +67,7 @@ class MenuController {
         }
         
         let decoder = JSONDecoder()
-        let orderResponse = try decoder.decode(OrderResponse, from: data)
+        let orderResponse = try decoder.decode(OrderResponse.self, from: data)
         
         return orderResponse.prepTime
     }

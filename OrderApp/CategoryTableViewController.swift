@@ -26,12 +26,12 @@ class CategoryTableViewController: UITableViewController {
 
     // MARK: Non-TableView Functions
     
-    func updateUI(with categories: [String]) {
+    private func updateUI(with categories: [String]) {
         self.categories = categories
         self.tableView.reloadData()
     }
     
-    func displayError(_ error: Error, title: String) {
+   private func displayError(_ error: Error, title: String) {
         guard let _ = viewIfLoaded?.window else { return }
         
         let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
@@ -58,7 +58,7 @@ class CategoryTableViewController: UITableViewController {
         return cell
     }
     
-    func configureCell(_ cell: UITableViewCell, forCategoryAt indexPath: IndexPath) {
+    private func configureCell(_ cell: UITableViewCell, forCategoryAt indexPath: IndexPath) {
         let category = categories[indexPath.row]
         var content = cell.defaultContentConfiguration()
         content.text = category.capitalized
@@ -100,14 +100,13 @@ class CategoryTableViewController: UITableViewController {
     }
     */
 
-    /*
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    @IBSegueAction func showMenu(_ coder: NSCoder, sender: Any?) -> MenuTableViewController? {
+        guard let cell = sender as? UITableViewCell, let indexPath = tableView.indexPath(for: cell) else {
+            return nil
+        }
+        let category = categories[indexPath.row]
+        return MenuTableViewController(coder: coder, category: category)
     }
-    */
-
 }
