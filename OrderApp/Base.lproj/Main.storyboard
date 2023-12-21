@@ -58,7 +58,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MenuItemCell" textLabel="UWL-v5-EwK" detailTextLabel="LQs-p1-vT2" style="IBUITableViewCellStyleValue1" id="V0u-JJ-lcW">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MenuItemCell" textLabel="UWL-v5-EwK" detailTextLabel="LQs-p1-vT2" style="IBUITableViewCellStyleValue1" id="V0u-JJ-lcW" customClass="MenuItemCell" customModule="OrderApp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="V0u-JJ-lcW" id="PoB-E3-xc9">
@@ -182,7 +182,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="OrderCell" textLabel="bhV-Ki-jEd" detailTextLabel="Oz9-VP-XIr" style="IBUITableViewCellStyleValue1" id="ZY7-gV-Uey">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="OrderCell" textLabel="bhV-Ki-jEd" detailTextLabel="Oz9-VP-XIr" style="IBUITableViewCellStyleValue1" id="ZY7-gV-Uey" customClass="MenuItemCell" customModule="OrderApp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZY7-gV-Uey" id="B6G-bD-eNL">
@@ -212,11 +212,66 @@
                             <outlet property="delegate" destination="k37-ey-bDw" id="vpt-Jf-vRL"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="rKq-m4-j3j"/>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="rKq-m4-j3j">
+                        <barButtonItem key="rightBarButtonItem" title="Submit" id="dqd-eC-Ste">
+                            <connections>
+                                <action selector="submitTapped:" destination="k37-ey-bDw" id="J5Y-2D-sPf"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="bVU-U1-whC" kind="presentation" identifier="confirmOrder" destinationCreationSelector="confirmOrder:" id="0X6-Ky-8oN"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wrW-pG-BRs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1112.2137404580153" y="355.63380281690144"/>
+        </scene>
+        <!--Order Confirmation View Controller-->
+        <scene sceneID="yTU-iF-Slb">
+            <objects>
+                <viewController id="bVU-U1-whC" customClass="OrderConfirmationViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ANy-X5-60e">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="fJb-Lh-avh">
+                                <rect key="frame" x="15" y="383.66666666666669" width="363" height="74.666666666666686"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SAT-qz-BJu">
+                                        <rect key="frame" x="161" y="0.0" width="41.333333333333343" height="20.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7cF-Eo-xTW">
+                                        <rect key="frame" x="140" y="40.333333333333314" width="83.333333333333314" height="34.333333333333343"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Dismiss"/>
+                                        <connections>
+                                            <segue destination="FDE-Fg-5vp" kind="unwind" identifier="dismissConfirmation" unwindAction="unwindToOrderListWithSegue:" id="FLX-09-F9M"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="3Gb-9j-XHv"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="fJb-Lh-avh" firstAttribute="centerY" secondItem="ANy-X5-60e" secondAttribute="centerY" id="7jI-og-i1N"/>
+                            <constraint firstItem="fJb-Lh-avh" firstAttribute="leading" secondItem="3Gb-9j-XHv" secondAttribute="leading" constant="15" id="Jof-rA-M7B"/>
+                            <constraint firstItem="3Gb-9j-XHv" firstAttribute="trailing" secondItem="fJb-Lh-avh" secondAttribute="trailing" constant="15" id="iOe-IK-gdR"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="SAt-Zr-GEM"/>
+                    <connections>
+                        <outlet property="confirmationLabel" destination="SAT-qz-BJu" id="u3o-r9-3gh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eIX-9Q-ahx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="FDE-Fg-5vp" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="1891" y="356"/>
         </scene>
         <!--Your Order-->
         <scene sceneID="rYn-gF-za0">
