@@ -12,6 +12,9 @@ class MenuTableViewController: UITableViewController {
 
     let category: String
     var menuItems = [MenuItem]()
+    var imageLoadTasks: [IndexPath: Task<Void, Never>] = [:]
+    
+    // MARK: Lifecycle
     
     init?(coder: NSCoder, category: String) {
         self.category = category
@@ -34,6 +37,12 @@ class MenuTableViewController: UITableViewController {
                 displayError(error, title: "Failed to Fetch Menu Items for \(self.category)")
             }
         }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        imageLoadTasks.forEach { key, value in value.cancel() }
     }
     
     // MARK: Non-TableView Functions
@@ -68,14 +77,35 @@ class MenuTableViewController: UITableViewController {
     }
     
     func configure(_ cell: UITableViewCell, forItemAt indexPath: IndexPath) {
+        guard let cell = cell as? MenuItemCell else { return }
         let menuItem = menuItems[indexPath.row]
         
-        var content = cell.defaultContentConfiguration()
-        content.text = menuItem.name
-        content.secondaryText = menuItem.price.formatted(.currency(code: "usd"))
-        cell.contentConfiguration = content
+        cell.itemName = menuItem.name
+        cell.price = menuItem.price
+        cell.image = nil
+        
+        imageLoadTasks[indexPath] = Task.init {
+            if let menuItemImage = menuItem.imageURL {
+                if let image = try? await MenuController.shared.fetchImage(from: menuItemImage) {
+                    if let currentIndexPath = self.tableView.indexPath(for: cell),
+                       currentIndexPath == indexPath {
+                        cell.image = image
+                    }
+                }
+
+            }
+        }
+        imageLoadTasks[indexPath] = nil
     }
 
+    
+    // MARK: TableView Delegate
+    
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        imageLoadTasks[indexPath]?.cancel()
+    }
+    
+    
     // MARK: - Navigation
 
     @IBSegueAction func showMenuItem(_ coder: NSCoder, sender: Any?) -> MenuItemDetailViewController? {

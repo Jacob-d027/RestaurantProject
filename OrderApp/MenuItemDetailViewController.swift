@@ -15,7 +15,7 @@ class MenuItemDetailViewController: UIViewController {
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var addToOrderButton: UIButton!
     
-
+    
     let menuItem: MenuItem
     
     // MARK: Lifecycle
@@ -32,7 +32,7 @@ class MenuItemDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         updateUI()
         // Do any additional setup after loading the view.
     }
@@ -40,29 +40,38 @@ class MenuItemDetailViewController: UIViewController {
     private func updateUI() {
         itemNameLabel.text = menuItem.name
         priceLabel.text = menuItem.price.formatted(.currency(code: "usd"))
-        print(menuItem.description)
         detailLabel.text = menuItem.description
+        
+        Task.init {
+            if let unwrappedImageURL = menuItem.imageURL {
+                if let image = try? await MenuController.shared.fetchImage(from: unwrappedImageURL) {
+                    imageView.image = image
+                }
+            }
+        }
     }
     
     @IBAction func addToOrderButtonTapped(_ sender: UIButton) {
         UIView.animate(withDuration: 0.5, delay: 0,
-               usingSpringWithDamping: 0.7, initialSpringVelocity: 0.1,
-               options: [], animations: {
-                self.addToOrderButton.transform =
-                   CGAffineTransform(scaleX: 2.0, y: 2.0)
-                self.addToOrderButton.transform =
-                   CGAffineTransform(scaleX: 1.0, y: 1.0)
-            }, completion: nil)
+                       usingSpringWithDamping: 0.7, initialSpringVelocity: 0.1,
+                       options: [], animations: {
+            self.addToOrderButton.transform =
+            CGAffineTransform(scaleX: 2.0, y: 2.0)
+            self.addToOrderButton.transform =
+            CGAffineTransform(scaleX: 1.0, y: 1.0)
+        }, completion: nil)
+        
+        MenuController.shared.order.menuItems.append(menuItem)
     }
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
