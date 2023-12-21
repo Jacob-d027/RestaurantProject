@@ -15,7 +15,7 @@ enum MenuControllerError: Error, LocalizedError {
 
 class MenuController {
     typealias MinutesToPrepare = Int
-    
+    static let shared = MenuController()
     let baseURL = URL(string: "http://localhost:8080/")
     
     
@@ -39,8 +39,8 @@ class MenuController {
         let menuURL = components.url!
         let (data, response) = try await URLSession.shared.data(from: menuURL)
         
-        print(response)
-        print(String(data: data, encoding: .utf8))
+//        print(response)
+//        print(String(data: data, encoding: .utf8))
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw MenuControllerError.menuItemsNotFound
         }

@@ -8,7 +8,6 @@
 import UIKit
 
 class CategoryTableViewController: UITableViewController {
-    let menuController = MenuController()
     var categories = [String]()
 
     override func viewDidLoad() {
@@ -16,7 +15,7 @@ class CategoryTableViewController: UITableViewController {
         
         Task.init {
             do {
-                let categories = try await menuController.fetchCategories()
+                let categories = try await MenuController.shared.fetchCategories()
                 updateUI(with: categories)
             } catch {
                 displayError(error, title: "Failed to Fetch Categories")
@@ -65,41 +64,6 @@ class CategoryTableViewController: UITableViewController {
         cell.contentConfiguration = content
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
     // MARK: - Navigation
     
     @IBSegueAction func showMenu(_ coder: NSCoder, sender: Any?) -> MenuTableViewController? {
@@ -109,4 +73,5 @@ class CategoryTableViewController: UITableViewController {
         let category = categories[indexPath.row]
         return MenuTableViewController(coder: coder, category: category)
     }
+    
 }

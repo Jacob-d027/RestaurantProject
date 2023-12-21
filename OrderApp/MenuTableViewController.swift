@@ -11,7 +11,6 @@ import UIKit
 class MenuTableViewController: UITableViewController {
 
     let category: String
-    let menuController = MenuController()
     var menuItems = [MenuItem]()
     
     init?(coder: NSCoder, category: String) {
@@ -29,7 +28,7 @@ class MenuTableViewController: UITableViewController {
         
         Task.init {
             do {
-                let menuItems = try await menuController.fetchMenuItems(forCategory: category)
+                let menuItems = try await MenuController.shared.fetchMenuItems(forCategory: category)
                 updateUI(with: menuItems)
             } catch {
                 displayError(error, title: "Failed to Fetch Menu Items for \(self.category)")
@@ -73,53 +72,20 @@ class MenuTableViewController: UITableViewController {
         
         var content = cell.defaultContentConfiguration()
         content.text = menuItem.name
-        content.secondaryText = "$\(menuItem.price)"
+        content.secondaryText = menuItem.price.formatted(.currency(code: "usd"))
         cell.contentConfiguration = content
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBSegueAction func showMenuItem(_ coder: NSCoder, sender: Any?) -> MenuItemDetailViewController? {
+        guard let cell = sender as? UITableViewCell, let indexPath = tableView.indexPath(for: cell) else {
+            return nil
+        }
+        
+        let menuItem = menuItems[indexPath.row]
+        return MenuItemDetailViewController(coder: coder, menuItem: menuItem)
     }
-    */
-
+    
+    
 }
